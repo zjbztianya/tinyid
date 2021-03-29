@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package api.idgen.errors;
+
+import "kratos/api/annotations.proto";
+
+option go_package = "api/idgen/errors;errors";
+option objc_class_prefix = "APIIdgenErrors";
+
+enum Idgen {
+  option (kratos.api.errors) = true;
+
+  MissingName = 0;
+}
