@@ -3,7 +3,6 @@ package data
 import (
 	"github.com/go-kratos/kratos/v2/log"
 	"tinyid/internal/biz"
-	"tinyid/pkg/snowflake"
 )
 
 const (
@@ -15,24 +14,18 @@ const (
 )
 
 type idgenRepo struct {
-	data      *Data
-	log       *log.Helper
-	snowflake *snowflake.SnowFlake
+	data *Data
+	log  *log.Helper
 }
 
 // NewIdgenRepo .
 func NewIdgenRepo(data *Data, logger log.Logger) biz.IdgenRepo {
 	return &idgenRepo{
-		data:      data,
-		log:       log.NewHelper("data/idgen", logger),
-		snowflake: snowflake.NewSnowFlake(data.workerID),
+		data: data,
+		log:  log.NewHelper("data/idgen", logger),
 	}
 }
 
-func (r *idgenRepo) CreateSnowflakeId() (int64, error) {
-	return r.snowflake.GenID()
-}
-
-func (r *idgenRepo) CreateSegmentId(tag string) (int64, error) {
-	return 0, nil
+func (r *idgenRepo) WorkerID() int64 {
+	return r.data.workerID
 }
