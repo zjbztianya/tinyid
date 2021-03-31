@@ -6,8 +6,10 @@
 package main
 
 import (
+	"context"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/registry"
 	"tinyid/internal/biz"
 	"tinyid/internal/conf"
 	"tinyid/internal/data"
@@ -18,8 +20,8 @@ import (
 // Injectors from wire.go:
 
 // initApp init kratos application.
-func initApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, error) {
-	dataData, err := data.NewData(confData)
+func initApp(contextContext context.Context, confServer *conf.Server, confData *conf.Data, logger log.Logger, registrar registry.Registrar) (*kratos.App, error) {
+	dataData, err := data.NewData(contextContext, confData, confServer)
 	if err != nil {
 		return nil, err
 	}
@@ -28,6 +30,6 @@ func initApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	idgenService := service.NewIdgenService(idgenUsecase, logger)
 	httpServer := server.NewHTTPServer(confServer, idgenService)
 	grpcServer := server.NewGRPCServer(confServer, idgenService)
-	app := newApp(logger, httpServer, grpcServer)
+	app := newApp(contextContext, logger, httpServer, grpcServer, registrar)
 	return app, nil
 }

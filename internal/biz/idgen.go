@@ -1,16 +1,13 @@
 package biz
 
 import (
+	"context"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
-type Idgen struct {
-	Hello string
-}
-
 type IdgenRepo interface {
-	CreateIdgen(*Idgen) error
-	UpdateIdgen(*Idgen) error
+	CreateSnowflakeId() (int64, error)
+	CreateSegmentId(tag string) (int64, error)
 }
 
 type IdgenUsecase struct {
@@ -19,13 +16,15 @@ type IdgenUsecase struct {
 }
 
 func NewIdgenUsecase(repo IdgenRepo, logger log.Logger) *IdgenUsecase {
-	return &IdgenUsecase{repo: repo, log: log.NewHelper("usecase/Idgen", logger)}
+	return &IdgenUsecase{repo: repo,
+		log: log.NewHelper("usecase/Idgen", logger),
+	}
 }
 
-func (uc *IdgenUsecase) Create(g *Idgen) error {
-	return uc.repo.CreateIdgen(g)
-}
-
-func (uc *IdgenUsecase) Update(g *Idgen) error {
-	return uc.repo.UpdateIdgen(g)
+func (uc *IdgenUsecase) Get(ctx context.Context, tag string) (int64, error) {
+	// tag 非空为segment模式的biz_tag,否则为snowflake
+	if tag == "" {
+		return uc.repo.CreateSnowflakeId()
+	}
+	return 0, nil
 }

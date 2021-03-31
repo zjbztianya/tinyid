@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package service.idgen.v1;
+package service.v1;
 
 import "google/api/annotations.proto";
 import "google/protobuf/duration.proto";
@@ -10,14 +10,14 @@ option go_package = "tinyid/api/idgen/v1;v1";
 // The id generator service definition.
 service Idgen {
   // SegmentId 段号模式获取ID
-  rpc SegmentId (SegmentRequest) returns (IdReply)  {
+  rpc SegmentID (SegmentRequest) returns (IdReply)  {
     option (google.api.http) = {
       get: "/api/segment/{tag}",
     };
   }
 
   // SnowflakeId 雪花算法模式获取ID
-  rpc SnowflakeId (SnowflakeRequest) returns (IdReply)  {
+  rpc SnowflakeID (SnowflakeRequest) returns (IdReply)  {
     option (google.api.http) = {
       get: "/api/snowflake",
     };
@@ -39,7 +39,7 @@ message SnowflakeRequest {
 }
 
 message IdReply {
-  string id = 1;
+  int64 id = 1;
 }
 
 message CurrentTimeRequest {

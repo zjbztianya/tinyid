@@ -29,11 +29,17 @@ message Data {
   message Database {
     string driver = 1;
     string source = 2;
+    int32 active = 3;
+    int32 idle = 4;
+    google.protobuf.Duration query_timeout = 5;
+    google.protobuf.Duration exec_timeout = 6;
+    google.protobuf.Duration idle_timeout = 7;
   }
 
   message Etcd {
     repeated string endpoints = 1;
     google.protobuf.Duration dial_timeout = 2;
+    google.protobuf.Duration TTL = 3;
   }
 
   Database database = 1;

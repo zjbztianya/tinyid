@@ -19,9 +19,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type IdgenClient interface {
 	// SegmentId 段号模式获取ID
-	SegmentId(ctx context.Context, in *SegmentRequest, opts ...grpc.CallOption) (*IdReply, error)
+	SegmentID(ctx context.Context, in *SegmentRequest, opts ...grpc.CallOption) (*IdReply, error)
 	// SnowflakeId 雪花算法模式获取ID
-	SnowflakeId(ctx context.Context, in *SnowflakeRequest, opts ...grpc.CallOption) (*IdReply, error)
+	SnowflakeID(ctx context.Context, in *SnowflakeRequest, opts ...grpc.CallOption) (*IdReply, error)
 	// CurrentTime 获取本节点时间戳
 	CurrentTime(ctx context.Context, in *CurrentTimeRequest, opts ...grpc.CallOption) (*CurrentTimeReply, error)
 }
@@ -34,18 +34,18 @@ func NewIdgenClient(cc grpc.ClientConnInterface) IdgenClient {
 	return &idgenClient{cc}
 }
 
-func (c *idgenClient) SegmentId(ctx context.Context, in *SegmentRequest, opts ...grpc.CallOption) (*IdReply, error) {
+func (c *idgenClient) SegmentID(ctx context.Context, in *SegmentRequest, opts ...grpc.CallOption) (*IdReply, error) {
 	out := new(IdReply)
-	err := c.cc.Invoke(ctx, "/service.idgen.v1.Idgen/SegmentId", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/service.v1.Idgen/SegmentID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *idgenClient) SnowflakeId(ctx context.Context, in *SnowflakeRequest, opts ...grpc.CallOption) (*IdReply, error) {
+func (c *idgenClient) SnowflakeID(ctx context.Context, in *SnowflakeRequest, opts ...grpc.CallOption) (*IdReply, error) {
 	out := new(IdReply)
-	err := c.cc.Invoke(ctx, "/service.idgen.v1.Idgen/SnowflakeId", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/service.v1.Idgen/SnowflakeID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (c *idgenClient) SnowflakeId(ctx context.Context, in *SnowflakeRequest, opt
 
 func (c *idgenClient) CurrentTime(ctx context.Context, in *CurrentTimeRequest, opts ...grpc.CallOption) (*CurrentTimeReply, error) {
 	out := new(CurrentTimeReply)
-	err := c.cc.Invoke(ctx, "/service.idgen.v1.Idgen/CurrentTime", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/service.v1.Idgen/CurrentTime", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -66,9 +66,9 @@ func (c *idgenClient) CurrentTime(ctx context.Context, in *CurrentTimeRequest, o
 // for forward compatibility
 type IdgenServer interface {
 	// SegmentId 段号模式获取ID
-	SegmentId(context.Context, *SegmentRequest) (*IdReply, error)
+	SegmentID(context.Context, *SegmentRequest) (*IdReply, error)
 	// SnowflakeId 雪花算法模式获取ID
-	SnowflakeId(context.Context, *SnowflakeRequest) (*IdReply, error)
+	SnowflakeID(context.Context, *SnowflakeRequest) (*IdReply, error)
 	// CurrentTime 获取本节点时间戳
 	CurrentTime(context.Context, *CurrentTimeRequest) (*CurrentTimeReply, error)
 	mustEmbedUnimplementedIdgenServer()
@@ -78,11 +78,11 @@ type IdgenServer interface {
 type UnimplementedIdgenServer struct {
 }
 
-func (UnimplementedIdgenServer) SegmentId(context.Context, *SegmentRequest) (*IdReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SegmentId not implemented")
+func (UnimplementedIdgenServer) SegmentID(context.Context, *SegmentRequest) (*IdReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SegmentID not implemented")
 }
-func (UnimplementedIdgenServer) SnowflakeId(context.Context, *SnowflakeRequest) (*IdReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SnowflakeId not implemented")
+func (UnimplementedIdgenServer) SnowflakeID(context.Context, *SnowflakeRequest) (*IdReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SnowflakeID not implemented")
 }
 func (UnimplementedIdgenServer) CurrentTime(context.Context, *CurrentTimeRequest) (*CurrentTimeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CurrentTime not implemented")
@@ -100,38 +100,38 @@ func RegisterIdgenServer(s grpc.ServiceRegistrar, srv IdgenServer) {
 	s.RegisterService(&Idgen_ServiceDesc, srv)
 }
 
-func _Idgen_SegmentId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Idgen_SegmentID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SegmentRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IdgenServer).SegmentId(ctx, in)
+		return srv.(IdgenServer).SegmentID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/service.idgen.v1.Idgen/SegmentId",
+		FullMethod: "/service.v1.Idgen/SegmentID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IdgenServer).SegmentId(ctx, req.(*SegmentRequest))
+		return srv.(IdgenServer).SegmentID(ctx, req.(*SegmentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Idgen_SnowflakeId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Idgen_SnowflakeID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SnowflakeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IdgenServer).SnowflakeId(ctx, in)
+		return srv.(IdgenServer).SnowflakeID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/service.idgen.v1.Idgen/SnowflakeId",
+		FullMethod: "/service.v1.Idgen/SnowflakeID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IdgenServer).SnowflakeId(ctx, req.(*SnowflakeRequest))
+		return srv.(IdgenServer).SnowflakeID(ctx, req.(*SnowflakeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -146,7 +146,7 @@ func _Idgen_CurrentTime_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/service.idgen.v1.Idgen/CurrentTime",
+		FullMethod: "/service.v1.Idgen/CurrentTime",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(IdgenServer).CurrentTime(ctx, req.(*CurrentTimeRequest))
@@ -158,16 +158,16 @@ func _Idgen_CurrentTime_Handler(srv interface{}, ctx context.Context, dec func(i
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Idgen_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "service.idgen.v1.Idgen",
+	ServiceName: "service.v1.Idgen",
 	HandlerType: (*IdgenServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SegmentId",
-			Handler:    _Idgen_SegmentId_Handler,
+			MethodName: "SegmentID",
+			Handler:    _Idgen_SegmentID_Handler,
 		},
 		{
-			MethodName: "SnowflakeId",
-			Handler:    _Idgen_SnowflakeId_Handler,
+			MethodName: "SnowflakeID",
+			Handler:    _Idgen_SnowflakeID_Handler,
 		},
 		{
 			MethodName: "CurrentTime",

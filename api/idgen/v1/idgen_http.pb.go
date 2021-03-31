@@ -22,9 +22,9 @@ const _ = http1.SupportPackageIsVersion1
 type IdgenHandler interface {
 	CurrentTime(context.Context, *CurrentTimeRequest) (*CurrentTimeReply, error)
 
-	SegmentId(context.Context, *SegmentRequest) (*IdReply, error)
+	SegmentID(context.Context, *SegmentRequest) (*IdReply, error)
 
-	SnowflakeId(context.Context, *SnowflakeRequest) (*IdReply, error)
+	SnowflakeID(context.Context, *SnowflakeRequest) (*IdReply, error)
 }
 
 func NewIdgenHandler(srv IdgenHandler, opts ...http1.HandleOption) http.Handler {
@@ -47,7 +47,7 @@ func NewIdgenHandler(srv IdgenHandler, opts ...http1.HandleOption) http.Handler 
 		}
 
 		next := func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.SegmentId(ctx, req.(*SegmentRequest))
+			return srv.SegmentID(ctx, req.(*SegmentRequest))
 		}
 		if h.Middleware != nil {
 			next = h.Middleware(next)
@@ -71,7 +71,7 @@ func NewIdgenHandler(srv IdgenHandler, opts ...http1.HandleOption) http.Handler 
 		}
 
 		next := func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.SnowflakeId(ctx, req.(*SnowflakeRequest))
+			return srv.SnowflakeID(ctx, req.(*SnowflakeRequest))
 		}
 		if h.Middleware != nil {
 			next = h.Middleware(next)
