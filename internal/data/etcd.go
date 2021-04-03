@@ -15,12 +15,18 @@ import (
 	"tinyid/pkg/ip"
 )
 
+const (
+	reportInterval = 3 * time.Second
+	minBackwards   = 3 * time.Second
+	workerIDPath   = "/id/snowflake"
+)
+
 func NewEtcd(c *conf.Data_Etcd) *clientv3.Client {
 	cli, err := clientv3.New(clientv3.Config{
 		Endpoints:   c.Endpoints,
 		DialTimeout: c.DialTimeout.AsDuration()})
 	if err != nil {
-		panic(err)
+		panic(errors.Wrap(err, "init etcd error"))
 	}
 	return cli
 }
@@ -35,8 +41,8 @@ func InitEtcd(ctx context.Context, data *Data, rpcAddr string) error {
 	}
 
 	_, port, _ := net.SplitHostPort(rpcAddr)
-	nodeKey := workerIDPath + ip.InternalIP() + ":" + port
-	resp, err := kv.Get(ctx, nodeKey, clientv3.WithPrefix())
+	nodeKey := workerIDPath + "/" + ip.InternalIP() + ":" + port
+	resp, err := kv.Get(ctx, workerIDPath, clientv3.WithPrefix())
 	if err != nil {
 		return err
 	}

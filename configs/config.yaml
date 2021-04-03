@@ -10,10 +10,11 @@ data:
     driver: mysql
     source: root:123456@tcp(127.0.0.1:3306)/test
     active: 16
-    idle: 10
-    query_timeout: 5s
-    exec_timeout: 5s
-    idle_timeout: 18000s
+    idle: 16
+    query_timeout: 3s
+    exec_timeout: 3s
+    tran_timeout: 3s
+    idle_timeout: 180s
   etcd:
     endpoints:
       - 127.0.0.1:2379

@@ -10,5 +10,6 @@ option objc_class_prefix = "APIIdgenErrors";
 enum Idgen {
   option (kratos.api.errors) = true;
 
-  MissingName = 0;
+  NotGenSegmentID = 0;
+  ClockBackwards = 1;
 }

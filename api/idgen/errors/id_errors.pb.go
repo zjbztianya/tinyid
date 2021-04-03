@@ -11,9 +11,14 @@ import (
 const _ = errors.SupportPackageIsVersion1
 
 const (
-	Errors_MissingName = "Idgen_MissingName"
+	Errors_NotGenSegmentID = "Idgen_NotGenSegmentID"
+	Errors_ClockBackwards  = "Idgen_ClockBackwards"
 )
 
-func IsMissingName(err error) bool {
-	return errors.Reason(err) == Errors_MissingName
+func IsNotGenSegmentID(err error) bool {
+	return errors.Reason(err) == Errors_NotGenSegmentID
+}
+
+func IsClockBackwards(err error) bool {
+	return errors.Reason(err) == Errors_ClockBackwards
 }

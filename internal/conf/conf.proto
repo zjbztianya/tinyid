@@ -34,6 +34,7 @@ message Data {
     google.protobuf.Duration query_timeout = 5;
     google.protobuf.Duration exec_timeout = 6;
     google.protobuf.Duration idle_timeout = 7;
+    google.protobuf.Duration tran_timeout = 8;
   }
 
   message Etcd {
