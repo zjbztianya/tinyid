@@ -21,6 +21,8 @@ const (
 	_getAllTags              = "SELECT biz_tag FROM tinyid_alloc"
 	segmentDuration          = 15 * time.Minute
 	maxStep                  = 1000000
+	fanoutBufferSize         = 30
+	fanoutBufferWorkers      = 3
 )
 
 type IDAlloc struct {
@@ -45,7 +47,7 @@ func NewIdgenRepo(data *Data, logger log.Logger) biz.IdgenRepo {
 		data:   data,
 		log:    log.NewHelper("data/idgen", logger),
 		flight: &singleflight.Group{},
-		fanout: fanout.NewFanout(8, 2),
+		fanout: fanout.NewFanout(fanoutBufferSize, fanoutBufferWorkers),
 	}
 
 	repo.updateSegmentCache()
@@ -74,7 +76,6 @@ func (r *idgenRepo) updateSegmentCache() {
 	for {
 		dbTags, err = r.tags(context.Background())
 		if err != nil {
-			r.log.Debug(err)
 			time.Sleep(time.Second)
 			continue
 		}
@@ -193,7 +194,6 @@ func (r *idgenRepo) segmentID(ctx context.Context, buffer *SegmentBuffer, tag st
 	buffer.mu.RLock()
 
 	segment := buffer.current()
-	r.log.Debugf("segment current idx:%d", buffer.curIdx)
 	if buffer.nextReady == 0 &&
 		float64(segment.idle()) < 0.9*float64(segment.step) &&
 		atomic.CompareAndSwapInt32(&buffer.loading, 0, 1) {
@@ -206,7 +206,6 @@ func (r *idgenRepo) segmentID(ctx context.Context, buffer *SegmentBuffer, tag st
 	}
 
 	value := atomic.AddInt64(&segment.value, int64(1))
-	r.log.Debugf("add segment value:%d maxID:%d", value, segment.maxID)
 	if value <= segment.maxID {
 		buffer.mu.RUnlock()
 		return value, nil

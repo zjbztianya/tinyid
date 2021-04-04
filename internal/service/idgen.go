@@ -29,7 +29,6 @@ func (s *IdgenService) SegmentID(ctx context.Context, req *pb.SegmentRequest) (*
 		s.log.Errorf("%v", errors2.Cause(err))
 		return nil, errors.ResourceExhausted(apierr.Errors_NotGenSegmentID, "tag:%s", req.Tag)
 	}
-	s.log.Debugf("generator segment id:%s %d", req.Tag, id)
 	return &pb.IdReply{Id: id}, nil
 }
 
@@ -38,7 +37,6 @@ func (s *IdgenService) SnowflakeID(ctx context.Context, req *pb.SnowflakeRequest
 	if err != nil {
 		return nil, errors.Internal(apierr.Errors_ClockBackwards, "snowflake")
 	}
-	s.log.Debugf("generator snowflake id:%d", id)
 	return &pb.IdReply{Id: id}, nil
 }
 
