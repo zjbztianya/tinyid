@@ -58,7 +58,8 @@ Transfer/sec:      7.61MB
 
 ### Getting Started
 本服务基于[Kratos V2](https://github.com/go-kratos/kratos) 框架
-####Required
+
+#### Required
 - go
 - mysql
 - etcd
