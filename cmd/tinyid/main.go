@@ -3,9 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	clientv3 "go.etcd.io/etcd/client/v3"
-	"os"
-
 	etcd "github.com/go-kratos/etcd/registry"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -14,8 +11,10 @@ import (
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"gopkg.in/yaml.v2"
 	"tinyid/internal/conf"
+	"tinyid/pkg/zap"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -49,8 +48,11 @@ func newApp(ctx context.Context, logger log.Logger, hs *http.Server, gs *grpc.Se
 
 func main() {
 	flag.Parse()
-	logger := log.NewStdLogger(os.Stdout)
 
+	logger, err := zap.NewLogger(zap.AddCaller())
+	if err != nil {
+		panic(err)
+	}
 	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),

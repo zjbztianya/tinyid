@@ -14,6 +14,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.0
 	go.etcd.io/etcd/client/v3 v3.5.0-alpha.0
+	go.uber.org/zap v1.16.0
 	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/net v0.0.0-20210330075724-22f4162a9025 // indirect
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9

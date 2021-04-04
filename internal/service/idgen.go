@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
+	errors2 "github.com/pkg/errors"
 	"time"
 	"tinyid/internal/biz"
 
@@ -25,7 +26,7 @@ func NewIdgenService(uc *biz.IdgenUsecase, logger log.Logger) *IdgenService {
 func (s *IdgenService) SegmentID(ctx context.Context, req *pb.SegmentRequest) (*pb.IdReply, error) {
 	id, err := s.uc.GetSegmentID(ctx, req.Tag)
 	if err != nil {
-		s.log.Errorf("%+v", err)
+		s.log.Errorf("%v", errors2.Cause(err))
 		return nil, errors.ResourceExhausted(apierr.Errors_NotGenSegmentID, "tag:%s", req.Tag)
 	}
 	s.log.Debugf("generator segment id:%s %d", req.Tag, id)
