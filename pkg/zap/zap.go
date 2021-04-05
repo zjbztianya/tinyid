@@ -1,10 +1,12 @@
 package zap
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"sync"
 )
 
 var (
@@ -18,7 +20,8 @@ var (
 )
 
 type Logger struct {
-	log *zap.Logger
+	log  *zap.Logger
+	pool *sync.Pool
 }
 
 func AddCaller() zap.Option {
@@ -38,7 +41,14 @@ func NewLogger(opts ...zap.Option) (*Logger, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Logger{log: l}, nil
+	return &Logger{
+		log: l,
+		pool: &sync.Pool{
+			New: func() interface{} {
+				return new(bytes.Buffer)
+			},
+		},
+	}, nil
 }
 
 func (l *Logger) Print(pairs ...interface{}) {
@@ -47,9 +57,17 @@ func (l *Logger) Print(pairs ...interface{}) {
 	if !ok {
 		return
 	}
+	if len(pairs)%2 != 0 {
+		pairs = append(pairs, "")
+	}
 	pairs = pairs[2:]
-	msg := fmt.Sprint(pairs...)
-	if ce := l.log.Check(zapLevel, msg); ce != nil {
+	buf := l.pool.Get().(*bytes.Buffer)
+	for i := 0; i < len(pairs); i += 2 {
+		fmt.Fprintf(buf, "%s=%v ", pairs[i], log.Value(pairs[i+1]))
+	}
+	if ce := l.log.Check(zapLevel, buf.String()); ce != nil {
 		ce.Write()
 	}
+	buf.Reset()
+	l.pool.Put(buf)
 }

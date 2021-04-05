@@ -28,8 +28,8 @@ func initApp(contextContext context.Context, confServer *conf.Server, confData *
 	idgenRepo := data.NewIdgenRepo(dataData, logger)
 	idgenUsecase := biz.NewIdgenUsecase(idgenRepo, logger)
 	idgenService := service.NewIdgenService(idgenUsecase, logger)
-	httpServer := server.NewHTTPServer(confServer, idgenService)
-	grpcServer := server.NewGRPCServer(confServer, idgenService)
+	httpServer := server.NewHTTPServer(confServer, idgenService, logger)
+	grpcServer := server.NewGRPCServer(confServer, idgenService, logger)
 	app := newApp(contextContext, logger, httpServer, grpcServer, registrar)
 	return app, nil
 }

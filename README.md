@@ -18,42 +18,41 @@ Tinyid是用Golang开发的一个分布式ID生成服务，参考了[美团Leaf]
 - DB段号
    
 ```
-wrk -t4 -c1000 -d30s --latency 'http://127.0.0.1:8000/api/segment/tinyid-segment-test'
-Running 30s test @ http://127.0.0.1:8000/api/segment/tinyid-segment-test
-  4 threads and 1000 connections
+wrk -t16 -c400 -d1m --latency 'http://127.0.0.1:8000/api/segment/tinyid-segment-test'
+Running 1m test @ http://127.0.0.1:8000/api/segment/tinyid-segment-test
+  16 threads and 400 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.55ms    6.61ms 254.60ms   97.56%
-    Req/Sec    13.78k     2.12k   18.90k    79.67%
+    Latency     4.75ms    2.21ms  91.17ms   78.65%
+    Req/Sec     5.28k   627.41     8.08k    68.73%
   Latency Distribution
-     50%    4.74ms
-     75%    6.06ms
-     90%    7.37ms
-     99%   13.42ms
-  1639373 requests in 30.01s, 192.30MB read
-  Socket errors: connect 751, read 143, write 0, timeout 0
-  Non-2xx or 3xx responses: 1
-Requests/sec:  54629.04
-Transfer/sec:      6.41MB
+     50%    4.56ms
+     75%    5.67ms
+     90%    7.03ms
+     99%   11.86ms
+  5048175 requests in 1.00m, 596.98MB read
+  Socket errors: connect 0, read 381, write 0, timeout 0
+Requests/sec:  84099.87
+Transfer/sec:      9.95MB
 ```
 
 - Snowflake
 
 ```
-wrk -t4 -c1000 -d30s --latency 'http://127.0.0.1:8000/api/snowflake'
-Running 30s test @ http://127.0.0.1:8000/api/snowflake
-  4 threads and 1000 connections
+wrk -t16 -c400 -d1m --latency 'http://127.0.0.1:8000/api/snowflake'
+Running 1m test @ http://127.0.0.1:8000/api/snowflake
+  16 threads and 400 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.01ms    3.09ms 112.92ms   75.53%
-    Req/Sec    14.97k     1.70k   19.56k    81.25%
+    Latency     5.17ms    2.18ms 108.75ms   80.78%
+    Req/Sec     4.83k   747.23     7.47k    66.00%
   Latency Distribution
-     50%    4.14ms
-     75%    5.40ms
-     90%    6.68ms
-     99%   11.85ms
-  1787329 requests in 30.01s, 228.41MB read
-  Socket errors: connect 751, read 142, write 0, timeout 0
-Requests/sec:  59563.64
-Transfer/sec:      7.61MB
+     50%    5.18ms
+     75%    6.21ms
+     90%    7.13ms
+     99%   10.91ms
+  4610760 requests in 1.00m, 589.22MB read
+  Socket errors: connect 0, read 384, write 0, timeout 0
+Requests/sec:  76808.95
+Transfer/sec:      9.82MB
 ```
 
 ### Getting Started
