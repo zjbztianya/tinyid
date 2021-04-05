@@ -248,7 +248,9 @@ func (r *idgenRepo) SegmentID(ctx context.Context, tag string) (int64, error) {
 }
 
 func (r *idgenRepo) tags(ctx context.Context) ([]string, error) {
-	rows, err := r.data.db.db.QueryContext(ctx, _getAllTags)
+	sctx, cancel := context.WithTimeout(ctx, r.data.db.conf.QueryTimeout.AsDuration())
+	defer cancel()
+	rows, err := r.data.db.db.QueryContext(sctx, _getAllTags)
 	if err != nil {
 		return nil, errors.Wrap(err, "tags:db.Query")
 	}
